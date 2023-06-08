@@ -60,15 +60,14 @@ def sorter(path):
 def main():
     path = Path.cwd()
     if len(sys.argv) > 1:
-        try:
-            path = sys.argv[1]
+        path = sys.argv[1]
+        if Path(path).exists():
             sorter(Path(path))
-        except:
+        else:
             print('Шляху не існує')
     else:
         sorter(Path(path))
     print(f'Шлях сортування {path}')      
-
  
 if __name__ == "__main__":
         main()
