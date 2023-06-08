@@ -58,14 +58,11 @@ def sorter(path):
                 item.rmdir()
         elif item.is_file():
             proccessing(item)
-            
-            
-path = Path.cwd()
-usr_path = input(f'Введіть шлях виконання сортування або Enter для активної папки {path}: ')
-path = usr_path if usr_path else path
-print(path)
-sorter(path)
-
+ 
 if __name__ == "__main__" :
-    sorter()
+    path = Path.cwd()
+    usr_path = input(f'Введіть шлях виконання сортування або Enter для активної папки {path}: ')
+    path = usr_path if usr_path else path
+    print(path)
+    sorter(path)
 
