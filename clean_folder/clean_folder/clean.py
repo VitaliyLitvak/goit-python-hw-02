@@ -59,11 +59,11 @@ def sorter(path):
         elif item.is_file():
             proccessing(item)
 
-path = Path.cwd()
-usr_path = input(f'Введіть шлях виконання сортування або Enter для активної папки {path}: ')
-path = usr_path if usr_path else path
-print(path)
  
 if __name__ == "__main__" :
+    path = Path.cwd()
+    usr_path = input(f'Введіть шлях виконання сортування або Enter для активної папки {path}: ')
+    path = usr_path if usr_path else path
+    print(path)
     sorter(Path(path))
 
