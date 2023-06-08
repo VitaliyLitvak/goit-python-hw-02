@@ -8,11 +8,6 @@ TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", 
                "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
 TRANS = {}
 
-path = Path.cwd()
-usr_path = input(f'Enter the path to sort or press Enter for the current directory {path}: ')
-path = usr_path if usr_path else path
-path = sys.argv[1]
-
 def normalize(file_name):
     file_name = sub(r"\W", "_", file_name)
     for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
