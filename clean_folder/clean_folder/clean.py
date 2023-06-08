@@ -60,7 +60,7 @@ def sorter(path):
             proccessing(item)
             
             
-path = Path(input('Ввведіть будь-ласка шлях до папки: '))
+path = Path.cwd()
 sorter(path)
 
 if __name__ == "__main__" :
