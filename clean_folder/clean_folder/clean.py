@@ -63,4 +63,6 @@ def sorter(path):
 path = Path(input('Ввведіть будь-ласка шлях до папки: '))
 sorter(path)
 
+if __name__ == "__main__" :
+    sorter()
 
