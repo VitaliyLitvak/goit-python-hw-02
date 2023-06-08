@@ -65,7 +65,7 @@ def main():
     usr_path = input(f'Enter the path to sort or press Enter for the current directory {path}: ')
     path = usr_path if usr_path else path
     path = sys.argv[1]
-    sorter(Path(path))
+    sorter(path)
  
 if __name__ == "__main__" :
     main()
