@@ -13,6 +13,7 @@ AUDIO = ('.mp3', '.ogg', '.wav', '.amr')
 VIDEO = ('.avi', '.mp4', '.mov', '.mkv')
 ARCHIVES = ('.zip', '.gz', '.tar')
 
+# Нормалізація імені
 def normalize(file_name):
     file_name = sub(r"\W", "_", file_name)
     for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
@@ -21,6 +22,7 @@ def normalize(file_name):
     file_name = ''.join(TRANS.get(ord(ch), ch) for ch in file_name)
     return file_name
 
+# Обробка файлу (нормалізація + сортуваня)
 def proccessing(item):
     if item.is_file():
         file_name, file_ext = item.stem, item.suffix 
@@ -47,6 +49,7 @@ def proccessing(item):
             except shutil.ReadError:
                 print("File can't be procceeded, please check if it's archive.")      
   
+# Перевірка директорі, видалення пустих
 def sorter(path):
     ignore_list = ('archives', 'video', 'audio', 'documents', 'images')
     for item in path.glob('*'):
@@ -57,17 +60,19 @@ def sorter(path):
         elif item.is_file():
             proccessing(item)
             
+# Перевірка шляху чи введений аргумент чи ні, та наявності введеного шляху
 def main():
     path = Path.cwd()
     if len(sys.argv) > 1:
         path = sys.argv[1]
         if Path(path).exists():
             sorter(Path(path))
+            print(f'Шлях сортування {path}') 
         else:
             print('Шляху не існує')
     else:
         sorter(Path(path))
-    print(f'Шлях сортування {path}')      
+        print(f'Шлях сортування {path}')      
  
 if __name__ == "__main__":
         main()
