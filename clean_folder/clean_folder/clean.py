@@ -61,6 +61,7 @@ def sorter(path):
             
             
 path = Path.cwd()
+print(f'Шлях виконання сортування {path}')
 sorter(path)
 
 if __name__ == "__main__" :
