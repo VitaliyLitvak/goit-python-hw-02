@@ -64,13 +64,13 @@ def main():
     path = Path.cwd()
     usr_path = input(f'Enter the path to sort or press Enter for the current directory {path}: ')
     path = usr_path if usr_path else path
-    path = sys.argv[1]
-    print(path)
-    sorter(Path(path))
+    if len(sys.argv) > 1:
+        path = sys.argv[1]
+        sorter(Path(path))
+    else:
+        sorter(Path(path))
+    print(path)      
+
  
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        path_arg = sys.argv[1]
-        sorter(Path(path_arg))
-    else:
         main()
