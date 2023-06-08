@@ -61,7 +61,9 @@ def sorter(path):
             
             
 path = Path.cwd()
-print(f'Шлях виконання сортування {path}')
+usr_path = input(f'Введіть шлях виконання сортування або Enter для активної папки {path}: ')
+path = usr_path if usr_path else path
+print(path)
 sorter(path)
 
 if __name__ == "__main__" :
