@@ -1,6 +1,7 @@
 import shutil 
 from pathlib import Path
 from re import sub
+import sys
 
 CYRILLIC_SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
 TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
@@ -59,11 +60,17 @@ def sorter(path):
         elif item.is_file():
             proccessing(item)
 
- 
-if __name__ == "__main__" :
+def main():
     path = Path.cwd()
-    usr_path = input(f'Введіть шлях виконання сортування або Enter для активної папки {path}: ')
+    usr_path = input(f'Enter the path to sort or press Enter for the current directory {path}: ')
     path = usr_path if usr_path else path
     print(path)
     sorter(Path(path))
 
+ 
+if __name__ == "__main__" :
+    if len(sys.argv) > 1:
+        path_arg = sys.argv[1]
+        sorter(Path(path_arg))
+    else:
+        main()
