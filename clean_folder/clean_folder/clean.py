@@ -7,6 +7,11 @@ CYRILLIC_SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыь
 TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
                "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
 TRANS = {}
+IMAGES = ('.jpeg', '.png', '.jpg', '.svg')
+DOCUMENTS = ('.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx')
+AUDIO = ('.mp3', '.ogg', '.wav', '.amr')
+VIDEO = ('.avi', '.mp4', '.mov', '.mkv')
+ARCHIVES = ('.zip', '.gz', '.tar')
 
 def normalize(file_name):
     file_name = sub(r"\W", "_", file_name)
@@ -16,39 +21,31 @@ def normalize(file_name):
     file_name = ''.join(TRANS.get(ord(ch), ch) for ch in file_name)
     return file_name
 
-
 def proccessing(item):
     if item.is_file():
         file_name, file_ext = item.stem, item.suffix 
         file_ext = file_ext.lower()
-        images = ('.jpeg', '.png', '.jpg', '.svg')
-        documents = ('.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx')
-        audio = ('.mp3', '.ogg', '.wav', '.amr')
-        video = ('.avi', '.mp4', '.mov', '.mkv')
-        archives = ('.zip', '.gz', '.tar')
         file_name = normalize(file_name)
-        
         norm_name = file_name + file_ext
-        if file_ext in images:
+        if file_ext in IMAGES:
             Path.mkdir(item.parent / 'images', exist_ok=True)
             item.rename(item.parent / 'images' / norm_name)
-        elif file_ext in documents:
+        elif file_ext in DOCUMENTS:
             Path.mkdir(item.parent / 'documents', exist_ok=True)
             item.rename(item.parent / 'documents' / norm_name) 
-        elif file_ext in audio:
+        elif file_ext in AUDIO:
             Path.mkdir(item.parent / 'audio', exist_ok=True)
             item.rename(item.parent / 'audio' / norm_name)    
-        elif file_ext in video:
+        elif file_ext in VIDEO:
             Path.mkdir(item.parent / 'video', exist_ok=True)
             item.rename(item.parent / 'video' / norm_name)  
-        elif file_ext in archives:
+        elif file_ext in ARCHIVES:
             try:
                 Path.mkdir(item.parent / 'archives', exist_ok=True)
                 item.rename(item.parent / 'archives' / norm_name)
                 shutil.unpack_archive(Path(item.parent / 'archives' / norm_name), Path(item.parent / 'archives' / file_name))
             except shutil.ReadError:
-                print("File can't be procceeded, please check if it's archive.")
-            
+                print("File can't be procceeded, please check if it's archive.")      
   
 def sorter(path):
     ignore_list = ('archives', 'video', 'audio', 'documents', 'images')
@@ -63,8 +60,11 @@ def sorter(path):
 def main():
     path = Path.cwd()
     if len(sys.argv) > 1:
-        path = sys.argv[1]
-        sorter(Path(path))
+        try:
+            path = sys.argv[1]
+            sorter(Path(path))
+        except:
+            print('Шляху не існує')
     else:
         sorter(Path(path))
     print(f'Шлях сортування {path}')      
