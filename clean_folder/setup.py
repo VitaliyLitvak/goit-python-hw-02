@@ -7,4 +7,4 @@ setup(name='clean-folder',
       author='Litvak Vitaliy',
       author_email='vitaliy.litvak@gmail.com',
       packages=find_namespace_packages(),
-      entry_points={'console_scripts': ['clean-folder = clean_folder.clean:sorter']})
+      entry_points={'console_scripts': ['clean-folder = clean_folder.clean:main']})
