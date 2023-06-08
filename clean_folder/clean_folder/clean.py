@@ -64,5 +64,5 @@ if __name__ == "__main__" :
     usr_path = input(f'Введіть шлях виконання сортування або Enter для активної папки {path}: ')
     path = usr_path if usr_path else path
     print(path)
-    sorter(path)
+    sorter(Path(path))
 
