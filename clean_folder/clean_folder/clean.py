@@ -1,17 +1,18 @@
 import shutil 
 from pathlib import Path
 from re import sub
+from datetime import datetime
 import sys
 
 CYRILLIC_SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
 TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
                "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
 TRANS = {}
-IMAGES = ('.jpeg', '.png', '.jpg', '.svg')
-DOCUMENTS = ('.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx')
-AUDIO = ('.mp3', '.ogg', '.wav', '.amr')
-VIDEO = ('.avi', '.mp4', '.mov', '.mkv')
-ARCHIVES = ('.zip', '.gz', '.tar')
+CATEGORIES = {'images': ('.jpeg', '.png', '.jpg', '.svg'),
+              'documents': ('.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx'),
+              'audio': ('.mp3', '.ogg', '.wav', '.amr'),
+              'video': ('.avi', '.mp4', '.mov', '.mkv'),
+              'archives': ('.zip', '.gz', '.tar')}
 
 # Нормалізація імені
 def normalize(file_name):
@@ -29,25 +30,23 @@ def proccessing(item):
         file_ext = file_ext.lower()
         file_name = normalize(file_name)
         norm_name = file_name + file_ext
-        if file_ext in IMAGES:
-            Path.mkdir(item.parent / 'images', exist_ok=True)
-            item.rename(item.parent / 'images' / norm_name)
-        elif file_ext in DOCUMENTS:
-            Path.mkdir(item.parent / 'documents', exist_ok=True)
-            item.rename(item.parent / 'documents' / norm_name) 
-        elif file_ext in AUDIO:
-            Path.mkdir(item.parent / 'audio', exist_ok=True)
-            item.rename(item.parent / 'audio' / norm_name)    
-        elif file_ext in VIDEO:
-            Path.mkdir(item.parent / 'video', exist_ok=True)
-            item.rename(item.parent / 'video' / norm_name)  
-        elif file_ext in ARCHIVES:
+        if file_ext in CATEGORIES['archives']:
+                    try:
+                        Path.mkdir(main_path / 'archives', exist_ok=True)
+                        item.rename(main_path / 'archives' / norm_name)
+                        shutil.unpack_archive(main_path / 'archives' / norm_name, main_path / 'archives' / file_name)
+                    except shutil.ReadError:
+                        print("File can't be procceeded, please check if it's archive.")
+        for cat, ext in CATEGORIES.items():
             try:
-                Path.mkdir(item.parent / 'archives', exist_ok=True)
-                item.rename(item.parent / 'archives' / norm_name)
-                shutil.unpack_archive(Path(item.parent / 'archives' / norm_name), Path(item.parent / 'archives' / file_name))
-            except shutil.ReadError:
-                print("File can't be procceeded, please check if it's archive.")      
+                if file_ext in ext and file_ext not in CATEGORIES['archives']:
+                    Path.mkdir(main_path / cat , exist_ok=True)
+                    item.rename(main_path / cat / norm_name)
+            except FileExistsError:
+                timestamp = datetime.now().strftime("%Y_%m_%d-%H_%M")
+                norm_name = f'{file_name}{timestamp}{file_ext}'
+                item.rename(main_path / cat / norm_name)
+                print(f'File already exsists {item} file was moved and renamed to {norm_name}')     
   
 # Перевірка директорі, видалення пустих
 def sorter(path):
@@ -61,18 +60,23 @@ def sorter(path):
             proccessing(item)
             
 # Перевірка шляху чи введений аргумент чи ні, та наявності введеного шляху
-def main():
+def path():
     path = Path.cwd()
     if len(sys.argv) > 1:
         path = sys.argv[1]
         if Path(path).exists():
-            sorter(Path(path))
-            print(f'Шлях сортування {path}') 
+            print(f'1Шлях сортування {path}')
+            return Path(path) 
         else:
             print('Шляху не існує')
     else:
-        sorter(Path(path))
-        print(f'Шлях сортування {path}')      
+        print(f'Шлях сортування {path}')
+        return Path(path)
+
+main_path = path()
+
+def main():
+    sorter(main_path)    
  
 if __name__ == "__main__":
         main()
