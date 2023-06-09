@@ -42,6 +42,9 @@ def proccessing(item):
                 if file_ext in ext and file_ext not in CATEGORIES['archives']:
                     Path.mkdir(main_path / cat , exist_ok=True)
                     item.rename(main_path / cat / norm_name)
+                else:
+                    Path.mkdir(main_path / 'Other' , exist_ok=True)
+                    item.rename(main_path / 'Other' / norm_name)
             except FileExistsError:
                 timestamp = datetime.now().strftime("%Y_%m_%d-%H_%M")
                 norm_name = f'{file_name}{timestamp}{file_ext}'
