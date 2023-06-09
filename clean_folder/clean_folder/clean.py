@@ -37,19 +37,19 @@ def proccessing(item):
                         shutil.unpack_archive(main_path / 'archives' / norm_name, main_path / 'archives' / file_name)
                     except shutil.ReadError:
                         print("File can't be procceeded, please check if it's archive.")
-        for cat, ext in CATEGORIES.items():
-            try:
+        try:
+            for cat, ext in CATEGORIES.items():
                 if file_ext in ext and file_ext not in CATEGORIES['archives']:
                     Path.mkdir(main_path / cat , exist_ok=True)
                     item.rename(main_path / cat / norm_name)
-                else:
-                    Path.mkdir(main_path / 'Other' , exist_ok=True)
-                    item.rename(main_path / 'Other' / norm_name)
-            except FileExistsError:
+            if file_ext not in ext and str(item).lower() != str(sys.argv[0]).lower():
+                Path.mkdir(main_path / 'Other' , exist_ok=True)
+                item.rename(main_path / 'Other' / norm_name)
+        except FileExistsError:
                 timestamp = datetime.now().strftime("%Y_%m_%d-%H_%M")
                 norm_name = f'{file_name}{timestamp}{file_ext}'
                 item.rename(main_path / cat / norm_name)
-                print(f'File already exsists {item} file was moved and renamed to {norm_name}')     
+                print(f'File already exsists {item} file was moved and renamed to {norm_name}')      
   
 # Перевірка директорі, видалення пустих
 def sorter(path):
