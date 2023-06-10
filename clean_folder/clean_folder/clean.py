@@ -43,7 +43,7 @@ def proccessing(item):
                 Path.mkdir(main_path / cat , exist_ok=True)
                 item.rename(main_path / cat / norm_name)
                 return
-            if file_ext not in ext:
+            if file_ext not in ext and str(sys.argv[0]).lower() != str(item).lower():
                 Path.mkdir(main_path / 'other' , exist_ok=True)
                 item.rename(main_path / 'other' / norm_name)
                 return
