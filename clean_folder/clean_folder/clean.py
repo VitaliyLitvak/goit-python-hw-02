@@ -25,35 +25,37 @@ def normalize(file_name):
 
 # Обробка файлу (нормалізація + сортуваня)
 def proccessing(item):
-    if item.is_file():
-        file_name, file_ext = item.stem, item.suffix 
-        file_ext = file_ext.lower()
-        file_name = normalize(file_name)
-        norm_name = file_name + file_ext
-        if file_ext in CATEGORIES['archives']:
-                    try:
-                        Path.mkdir(main_path / 'archives', exist_ok=True)
-                        item.rename(main_path / 'archives' / norm_name)
-                        shutil.unpack_archive(main_path / 'archives' / norm_name, main_path / 'archives' / file_name)
-                    except shutil.ReadError:
-                        print("File can't be procceeded, please check if it's archive.")
+    file_name, file_ext = item.stem, item.suffix 
+    file_ext = file_ext.lower()
+    file_name = normalize(file_name)
+    norm_name = file_name + file_ext
+    if file_ext in CATEGORIES['archives']:
         try:
-            for cat, ext in CATEGORIES.items():
-                if file_ext in ext and file_ext not in CATEGORIES['archives']:
-                    Path.mkdir(main_path / cat , exist_ok=True)
-                    item.rename(main_path / cat / norm_name)
-            if file_ext not in ext and str(item).lower() != str(sys.argv[0]).lower():
-                Path.mkdir(main_path / 'Other' , exist_ok=True)
-                item.rename(main_path / 'Other' / norm_name)
-        except FileExistsError:
-                timestamp = datetime.now().strftime("%Y_%m_%d-%H_%M")
-                norm_name = f'{file_name}{timestamp}{file_ext}'
+            Path.mkdir(main_path / 'archives', exist_ok=True)
+            item.rename(main_path / 'archives' / norm_name)
+            shutil.unpack_archive(main_path / 'archives' / norm_name, main_path / 'archives' / file_name)
+            return
+        except shutil.ReadError:
+            print("File can't be procceeded, please check if it's archive.")
+    try:
+        for cat, ext in CATEGORIES.items():
+            if file_ext in ext and file_ext not in CATEGORIES['archives']:
+                Path.mkdir(main_path / cat , exist_ok=True)
                 item.rename(main_path / cat / norm_name)
-                print(f'File already exsists {item} file was moved and renamed to {norm_name}')      
-  
+                return
+            if file_ext not in ext:
+                Path.mkdir(main_path / 'other' , exist_ok=True)
+                item.rename(main_path / 'other' / norm_name)
+                return
+    except FileExistsError:
+        timestamp = datetime.now().strftime("%Y_%m_%d-%H_%M")
+        norm_name = f'{file_name}{timestamp}{file_ext}'
+        item.rename(main_path / cat / norm_name)
+        print(f'File already exsists {item} file was moved and renamed to {norm_name}')   
+
 # Перевірка директорі, видалення пустих
 def sorter(path):
-    ignore_list = ('archives', 'video', 'audio', 'documents', 'images')
+    ignore_list = ('archives', 'video', 'audio', 'documents', 'images','other')
     for item in path.glob('*'):
         if item.is_dir() and item.name not in ignore_list:
             sorter(item)
