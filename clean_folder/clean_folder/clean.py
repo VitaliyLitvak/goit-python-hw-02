@@ -44,8 +44,9 @@ def proccessing(item):
                 item.rename(main_path / cat / norm_name)
                 return
             if file_ext not in ext and str(sys.argv[0]).lower() != str(item).lower():
-                Path.mkdir(main_path / 'other' , exist_ok=True)
-                item.rename(main_path / 'other' / norm_name)
+                cat = 'other'
+                Path.mkdir(main_path / cat , exist_ok=True)
+                item.rename(main_path / cat / norm_name)
                 return
     except FileExistsError:
         timestamp = datetime.now().strftime("%Y_%m_%d-%H_%M")
